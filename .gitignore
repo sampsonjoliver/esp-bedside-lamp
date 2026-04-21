@@ -1,0 +1,4 @@
+venv/*
+.env
+.esphome
+secrets.yaml
