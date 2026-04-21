@@ -1,0 +1,12 @@
+esphome:
+  name: bedside-lamp-s3
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+packages:
+  base: !include ../common/base.yaml
+
+# Board-specific pin assignments and components go here

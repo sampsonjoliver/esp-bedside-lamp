@@ -1,0 +1,42 @@
+esphome:
+  name: bedside-lamp
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+packages:
+  base: !include ../common/base.yaml
+
+# Enable ESP32 touch inputs
+esp32_touch:
+  setup_mode: false
+
+# --- Prototype: touch input test ---
+# NOTE: GPIO2 onboard LED does not work on ESP32-DevKitC V4 (WROOM-32D).
+# This board has no controllable onboard LED. Remove once SK6812 strip is wired.
+output:
+  - platform: ledc
+    pin: GPIO2
+    id: onboard_led_pwm
+
+light:
+  - platform: monochromatic
+    output: onboard_led_pwm
+    name: "Onboard LED"
+    id: onboard_led
+
+binary_sensor:
+  - platform: esp32_touch
+    name: "Touch Button"
+    pin: GPIO4
+    threshold: 150 # Lower = less sensitive. Tune as needed.
+    on_press:
+      then:
+        - light.turn_on: onboard_led
+        - logger.log: "Touch detected!"
+    on_release:
+      then:
+        - light.turn_off: onboard_led
+        - logger.log: "Touch released!"
